@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Container,
   Card,
@@ -15,8 +15,8 @@ import { REMOVE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
-  const userData = data?.me || {};
+  const [removeBook] = useMutation(REMOVE_BOOK);
+  let userData = data?.me || {};
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -27,10 +27,11 @@ const SavedBooks = () => {
     }
 
     try {
-      const { data } = await removeBook({
+      const { user } = await removeBook({
         variables: { bookId },
       });
       // upon success, remove book's id from localStorage
+      userData = user;
       removeBookId(bookId);
     } catch (err) {
       console.error(err);
