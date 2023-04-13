@@ -6,15 +6,15 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('thoughts');
+        return User.findOne({ _id: context.user._id });
       }
       throw new AuthenticationError('You need to be logged in!');
     },
   },
 
   Mutation: {
-    addUser: async (parent, { username, email, password }) => {
-      const user = await User.create({ username, email, password });
+    addUser: async (parent, args) => {
+      const user = await User.create(args);
       const token = signToken(user);
       return { token, user };
     },
@@ -35,11 +35,11 @@ const resolvers = {
 
       return { token, user };
     },
-    saveBook: async (parent, { userId, bookId }, context) => {
+    saveBook: async (parent, { addBook}, context) => {
         if (context.user) {
         return User.findOneAndUpdate(
-          { _id: userId },
-          { $addToSet: { saveBook: bookId } },
+          { _id: context.user._id },
+          { $addToSet: { saveBook: addBook } },
           {
             new: true,
             runValidators: true,
@@ -49,11 +49,11 @@ const resolvers = {
         throw new AuthenticationError('You need to be logged in!');
     },
 
-    removeBook: async (parent, { userId, bookId }, context) => {
+    removeBook: async (parent, { bookId }, context) => {
         if(context.user) {
         return User.findOneAndUpdate(
-          { _id: userId },
-          { $pull: { saveBook: bookId } },
+          { _id: context.user._id },
+          { $pull: { saveBook: { bookId } }},
           { new: true }
         );
         }
