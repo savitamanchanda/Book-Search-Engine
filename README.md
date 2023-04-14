@@ -107,7 +107,7 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 
   ## Links to the Deployed Application 
 
-  * The URL of the deployed application - 
+  * The URL of the deployed application - https://sheltered-coast-51898.herokuapp.com/
 
   * The URL of the GitHub repository - https://github.com/savitamanchanda/Book-Search-Engine
 
